@@ -1,0 +1,19 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    volumes: [mongo_data:/data/db]
+  app:
+    build: .
+    restart: unless-stopped
+    ports: ["9000:9000"]
+    environment:
+      NODE_ENV: production
+      PORT: 9000
+      MONGO_URI: mongodb://mongo:27017/NewsPortal
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET in a .env file next to this file}
+    volumes: [uploads_data:/app/Backend/uploads]
+    depends_on: [mongo]
+volumes:
+  mongo_data:
+  uploads_data:
